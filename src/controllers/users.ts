@@ -7,6 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import { secret } from "../config";
 import UserModel from '../models/user';
 import { UserDocument } from "../types/user.interface";
+import { ExpressRequestInterface } from "../types/express-request.interface";
 
 const normalizeUser = (user: UserDocument) => {
     const { email, username, id } = user;
@@ -64,4 +65,11 @@ export const login = async (
     } catch (error) {
         next(error);
     }
+}
+
+export const currentUser = async (req: ExpressRequestInterface, res: Response) => {
+    if (!req.user) {
+        return res.sendStatus(StatusCodes.UNAUTHORIZED);
+    }
+    res.send(normalizeUser(req.user));
 }
