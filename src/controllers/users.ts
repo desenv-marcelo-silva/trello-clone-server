@@ -40,3 +40,28 @@ export const register = async (
         next(error)
     }
 }
+
+export const login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { email } = req.body;
+        const user = await UserModel.findOne({ email }).select("+password");
+        const errors = { emailOrPassword: "Incorrect e-mail or password" };
+
+        if (!user) {
+            return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(errors);
+        }
+
+        const isSamePassword = await user.validatePassword(req.body.password);
+        if (!isSamePassword) {
+            return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(errors);
+        }
+
+        res.send(normalizeUser(user));
+    } catch (error) {
+        next(error);
+    }
+}
