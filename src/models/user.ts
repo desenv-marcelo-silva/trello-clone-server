@@ -41,5 +41,4 @@ userSchema.methods.validatePassword = function (password: string) {
     return bcryptjs.compare(password, this.password);
 };
 
-
 export default model<UserDocument>('User', userSchema);
