@@ -3,6 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import cors from 'cors';
 
 import * as usersController from "./controllers/users";
 import authMiddleware from "./middlewares/auth";
@@ -11,6 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
